@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectBrowser } from 'nest-puppeteer';
 import { Browser } from 'puppeteer';
+import { clearBrowser } from 'src/utils/clear-browser';
 import { setTokenToBrowser } from '../guards/auth-browser';
 import { Card } from '../models/card.model';
 
@@ -10,14 +11,12 @@ export class CardsService {
   async getCardList(token: string): Promise<Card[]> {
     const context = await this.browser.createIncognitoBrowserContext();
     const page = await context.newPage();
+    await clearBrowser(page);
+
     await setTokenToBrowser(token, page);
 
     await page.goto('https://www.ov-chipkaart.nl/my-ov-chip/my-cards.htm', {
-      waitUntil: 'networkidle2',
-    });
-
-    await page.screenshot({
-      path: 'screenshots/cards-1.png',
+      waitUntil: 'networkidle0',
     });
 
     const table = await page.waitForSelector('#kaartenoverzicht');
@@ -51,10 +50,6 @@ export class CardsService {
           type: cardTypes[i].trim(),
         },
     );
-
-    await page.screenshot({
-      path: 'screenshots/cards-1.png',
-    });
 
     await context.close();
 

@@ -1,6 +1,7 @@
 import type { Browser } from 'puppeteer';
 import { Injectable } from '@nestjs/common';
 import { InjectBrowser } from 'nest-puppeteer';
+import { clearBrowser } from 'src/utils/clear-browser';
 
 @Injectable()
 export class BalanceService {
@@ -10,8 +11,10 @@ export class BalanceService {
     const context = await this.browser.createIncognitoBrowserContext();
 
     const page = await context.newPage();
+    await clearBrowser(page);
+
     await page.goto('https://www.ov-chipkaart.nl/home.htm#/', {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle0',
     });
     const inputEl = await page.waitForSelector('#mediumInput');
     await inputEl.type(number);
@@ -23,13 +26,11 @@ export class BalanceService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await formEl.evaluate((el) => el.submit());
-    await page.screenshot({
-      path: 'screenshots/balance-1.png',
+
+    await page.waitForNavigation({
+      waitUntil: 'networkidle0',
     });
-    await page.waitForNavigation();
-    await page.screenshot({
-      path: 'screenshots/balance-2.png',
-    });
+
     const priceEl = await page.waitForSelector(
       '#saldochecker > div > div > div > div > div.flex-row.main.wrap > div.flex-row-cell.f1.left > div.creditInformationView > div.flex-row.amount > div > div > span',
     );
