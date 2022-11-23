@@ -6,6 +6,8 @@ import { AccountController } from './controllers/account.controller';
 import { AccountService } from './services/account.service';
 import { CardsController } from './controllers/cards.controller';
 import { CardsService } from './services/cards.service';
+import { HistoryController } from './controllers/history.controller';
+import { HistoryService } from './services/history.service';
 
 @Module({
   imports: [
@@ -17,7 +19,12 @@ import { CardsService } from './services/cards.service';
     ),
     PuppeteerModule.forFeature(),
   ],
-  controllers: [AccountController, BalanceController, CardsController],
-  providers: [AccountService, BalanceService, CardsService],
+  controllers: [
+    AccountController,
+    BalanceController,
+    CardsController,
+    HistoryController,
+  ],
+  providers: [AccountService, BalanceService, CardsService, HistoryService],
 })
 export class AppModule {}

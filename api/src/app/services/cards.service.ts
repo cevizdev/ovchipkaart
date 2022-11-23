@@ -21,34 +21,16 @@ export class CardsService {
 
     const table = await page.waitForSelector('#kaartenoverzicht');
 
-    const cardNames = await table.evaluate(() =>
+    const cards = await table.evaluate(() =>
       Array.from(
         document.querySelectorAll('#kaartenoverzicht > tbody > tr'),
-        (el) => el.querySelector('.alias').textContent,
+        (el) =>
+          <Card>{
+            name: el.querySelector('.alias').textContent.trim(),
+            number: el.querySelector('.mediumid').textContent.trim(),
+            type: el.querySelector('.profile').textContent.trim(),
+          },
       ),
-    );
-
-    const cardNumbers = await table.evaluate(() =>
-      Array.from(
-        document.querySelectorAll('#kaartenoverzicht > tbody > tr'),
-        (el) => el.querySelector('.mediumid').textContent,
-      ),
-    );
-
-    const cardTypes = await table.evaluate(() =>
-      Array.from(
-        document.querySelectorAll('#kaartenoverzicht > tbody > tr'),
-        (el) => el.querySelector('.profile').textContent,
-      ),
-    );
-
-    const cards = cardNumbers.map(
-      (c, i) =>
-        <Card>{
-          name: cardNames[i].trim(),
-          number: c.trim(),
-          type: cardTypes[i].trim(),
-        },
     );
 
     await context.close();
