@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectBrowser } from 'nest-puppeteer';
 import { Browser } from 'puppeteer';
 import { encodeBase64 } from 'src/utils/base64';
+import { clearBrowser } from 'src/utils/clear-browser';
 import { LoginRequest, LoginResponse } from '../models/login.model';
 
 @Injectable()
@@ -12,9 +13,10 @@ export class AccountService {
     const context = await this.browser.createIncognitoBrowserContext();
     const response = <LoginResponse>{};
     const page = await context.newPage();
+    await clearBrowser(page);
 
     await page.goto('https://www.ov-chipkaart.nl/my-ov-chip.htm', {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle0',
     });
 
     await page.waitForNavigation();
@@ -24,6 +26,13 @@ export class AccountService {
 
     const passwordTxt = await page.waitForSelector('#password');
     await passwordTxt.type(model.password);
+
+    const rememberMe = await page.waitForSelector('#chkRemember');
+    await rememberMe.click();
+
+    await page.screenshot({
+      path: 'screenshots/login-1.png',
+    });
 
     const loginForm = await page.waitForSelector('#login-form');
 
