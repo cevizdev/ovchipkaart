@@ -12,9 +12,11 @@ RUN apt-get update && apt-get install -yq gconf-service libasound2 libatk1.0-0 l
     libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release \
     xdg-utils wget
 
-COPY . .
+COPY package*.json ./
 
 RUN npm install
+
+COPY . .
 
 RUN npm run build
 
