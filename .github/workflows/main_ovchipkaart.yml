@@ -27,7 +27,7 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: https://ghcr.io//
+        registry: https://ghcr.io/
         username: ${{ secrets.AzureAppService_ContainerUsername_90f6570b5e7d4af285fce4566150321f }}
         password: ${{ secrets.AzureAppService_ContainerPassword_4376f96f62424888a0359dec16b1b6c8 }}
 
@@ -54,4 +54,4 @@ jobs:
         app-name: 'ovchipkaart'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e8b1b4a2d87141a890c3df13da39c899 }}
-        images: 'ghcr.io//${{ secrets.AzureAppService_ContainerUsername_90f6570b5e7d4af285fce4566150321f }}/usigntech/ovchipkaart:${{ github.sha }}'
+        images: 'ghcr.io/usigntech/ovchipkaart:${{ github.sha }}'
