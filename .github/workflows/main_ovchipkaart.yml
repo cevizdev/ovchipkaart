@@ -34,7 +34,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ghcr.io//${{ secrets.AzureAppService_ContainerUsername_90f6570b5e7d4af285fce4566150321f }}/usigntech/ovchipkaart:${{ github.sha }}
+        tags: ghcr.io/usigntech/ovchipkaart:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
