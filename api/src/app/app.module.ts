@@ -10,15 +10,7 @@ import { HistoryController } from './controllers/history.controller';
 import { HistoryService } from './services/history.service';
 
 @Module({
-  imports: [
-    PuppeteerModule.forRoot(
-      {
-        pipe: true,
-        ignoreDefaultArgs: ['--proxy-server=socks5://127.0.0.1:9050'],
-      }, // optional, any Puppeteer launch options here or leave empty for good defaults */,
-    ),
-    PuppeteerModule.forFeature(),
-  ],
+  imports: [PuppeteerModule.forRoot(), PuppeteerModule.forFeature()],
   controllers: [
     AccountController,
     BalanceController,

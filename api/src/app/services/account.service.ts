@@ -30,10 +30,6 @@ export class AccountService {
     const rememberMe = await page.waitForSelector('#chkRemember');
     await rememberMe.click();
 
-    await page.screenshot({
-      path: 'screenshots/login-1.png',
-    });
-
     const loginForm = await page.waitForSelector('#login-form');
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
