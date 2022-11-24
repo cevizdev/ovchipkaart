@@ -35,7 +35,7 @@ jobs:
       with:
         push: true
         tags: ghcr.io/usigntech/ovchipkaart:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./api/Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
