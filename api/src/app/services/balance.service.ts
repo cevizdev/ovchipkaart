@@ -42,9 +42,7 @@ export class BalanceService {
     );
 
     const value = await priceEl.evaluate((el) => el.textContent);
-    await page.screenshot({
-      path: 'screenshots/balance-1.png',
-    });
+
     await context.close();
 
     return { value };
