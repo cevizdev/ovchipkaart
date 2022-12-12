@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectBrowser } from 'nest-puppeteer';
-import { Browser } from 'puppeteer';
+import { InjectBrowser } from 'nestjs-playwright';
+import { Browser } from 'playwright';
 import { clearBrowser } from 'src/utils/clear-browser';
 import { setTokenToBrowser } from '../guards/auth-browser';
 import { Card } from '../models/card.model';
@@ -9,14 +9,14 @@ import { Card } from '../models/card.model';
 export class CardsService {
   constructor(@InjectBrowser() private readonly browser: Browser) {}
   async getCardList(token: string): Promise<Card[]> {
-    const context = await this.browser.createIncognitoBrowserContext();
+    const context = await this.browser.newContext();
     const page = await context.newPage();
     await clearBrowser(page);
 
     await setTokenToBrowser(token, page);
 
     await page.goto('https://www.ov-chipkaart.nl/my-ov-chip/my-cards.htm', {
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle',
     });
 
     const table = await page.waitForSelector('#kaartenoverzicht');

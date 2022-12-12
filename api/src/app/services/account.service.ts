@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectBrowser } from 'nest-puppeteer';
-import { Browser } from 'puppeteer';
+import { InjectBrowser } from 'nestjs-playwright';
+import { Browser } from 'playwright';
 import { encodeBase64 } from 'src/utils/base64';
 import { clearBrowser } from 'src/utils/clear-browser';
 import { LoginRequest, LoginResponse } from '../models/login.model';
@@ -10,13 +10,13 @@ export class AccountService {
   constructor(@InjectBrowser() private readonly browser: Browser) {}
 
   async login(model: LoginRequest): Promise<LoginResponse> {
-    const context = await this.browser.createIncognitoBrowserContext();
+    const context = await this.browser.newContext();
     const response = <LoginResponse>{};
     const page = await context.newPage();
     await clearBrowser(page);
 
     await page.goto('https://www.ov-chipkaart.nl/my-ov-chip.htm', {
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle',
     });
 
     await page.waitForNavigation();
@@ -52,7 +52,7 @@ export class AccountService {
 
     response.isSuccess = !hasError;
 
-    const cookies = await page.cookies();
+    const cookies = await context.cookies();
 
     response.token = !hasError ? encodeBase64(JSON.stringify(cookies)) : '';
 

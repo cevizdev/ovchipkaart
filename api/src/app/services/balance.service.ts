@@ -1,6 +1,6 @@
-import type { Browser } from 'puppeteer';
 import { Injectable } from '@nestjs/common';
-import { InjectBrowser } from 'nest-puppeteer';
+import { InjectBrowser } from 'nestjs-playwright';
+import { Browser } from 'playwright';
 import { clearBrowser } from 'src/utils/clear-browser';
 import { setTokenToBrowser } from '../guards/auth-browser';
 
@@ -9,7 +9,7 @@ export class BalanceService {
   constructor(@InjectBrowser() private readonly browser: Browser) {}
 
   async getBalance(number: string, token: string): Promise<{ value: string }> {
-    const context = await this.browser.createIncognitoBrowserContext();
+    const context = await this.browser.newContext();
 
     const page = await context.newPage();
     await clearBrowser(page);
@@ -19,7 +19,7 @@ export class BalanceService {
     }
 
     await page.goto('https://www.ov-chipkaart.nl/home.htm#/', {
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle',
     });
 
     const inputEl = await page.waitForSelector('#mediumInput');
@@ -34,7 +34,7 @@ export class BalanceService {
     await formEl.evaluate((el) => el.submit());
 
     await page.waitForNavigation({
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle',
     });
 
     const priceEl = await page.waitForSelector(

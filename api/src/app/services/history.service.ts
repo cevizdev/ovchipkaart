@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectBrowser } from 'nest-puppeteer';
-import { Browser } from 'puppeteer';
+import { InjectBrowser } from 'nestjs-playwright';
+import { Browser } from 'playwright';
 import { setTokenToBrowser } from '../guards/auth-browser';
 import { Card } from '../models/card.model';
 import { History } from '../models/history.model';
@@ -10,7 +10,7 @@ export class HistoryService {
   constructor(@InjectBrowser() private readonly browser: Browser) {}
 
   async getHistory(number: string, token: string): Promise<History[]> {
-    const context = await this.browser.createIncognitoBrowserContext();
+    const context = await this.browser.newContext();
     const page = await context.newPage();
 
     await setTokenToBrowser(token, page);
@@ -18,7 +18,7 @@ export class HistoryService {
     await page.goto(
       'https://www.ov-chipkaart.nl/my-ov-chip/my-travel-history.htm',
       {
-        waitUntil: 'networkidle0',
+        waitUntil: 'networkidle',
       },
     );
 
@@ -39,7 +39,7 @@ export class HistoryService {
     await page.goto(
       `https://www.ov-chipkaart.nl/my-ov-chip/my-travel-history.htm?mediumid=${selectedCard.id}#selected-card`,
       {
-        waitUntil: 'networkidle0',
+        waitUntil: 'networkidle',
       },
     );
 
