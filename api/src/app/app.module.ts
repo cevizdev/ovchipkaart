@@ -14,6 +14,7 @@ import { PlaywrightModule } from 'nestjs-playwright';
     PlaywrightModule.forRoot({
       headless: true,
       isGlobal: true,
+      executablePath: process.env.CHROME_BIN,
     }),
     PlaywrightModule.forFeature(),
   ],
